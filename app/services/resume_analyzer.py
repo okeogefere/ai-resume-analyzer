@@ -4,10 +4,13 @@ from app.services.keyword_analyzer import (
     compare_keywords,
     calculate_match_score
 )
+from app.core.logging_config import logger
 
 
 
 def analyze_resume(resume_text, job_description):
+    logger.info("Starting resume analysis")
+
 
     cleaned_resume = clean_text(resume_text)
     cleaned_job = clean_text(job_description)
@@ -24,6 +27,8 @@ def analyze_resume(resume_text, job_description):
         comparison["matched"],
         len(job_skills)
     )
+    logger.info("Resume analysis completed")
+
 
     return generate_analysis_report(
         resume_skills,
@@ -47,3 +52,4 @@ def generate_analysis_report(
         "extra_skills": list(comparison["extra"]),
         "match_score": score
     }
+

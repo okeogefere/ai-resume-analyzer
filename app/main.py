@@ -2,10 +2,11 @@ from fastapi import FastAPI
 from app.api.health import router as health_router
 from app.api.resume import router as resume_router
 
+from app.core.config import settings
+
 app = FastAPI(
-    title="AI Resume Analyzer",
-    description="Analyze resumes against job descriptions using Python and AI.",
-    version="1.0.0",
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
 )
 
 @app.get("/")

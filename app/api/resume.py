@@ -5,6 +5,8 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from app.services.file_service import save_uploaded_file
 from app.services.resume_parser import extract_resume_text
 from app.services.resume_analyzer import analyze_resume
+from app.services.ai_service import generate_resume_feedback
+from app.core.logging_config import logger
 
 router = APIRouter(
     prefix="/resume",
@@ -42,36 +44,52 @@ async def analyze_resume_endpoint(
     Analyze a resume against a job description.
     """
 
+    logger.info("Analyze endpoint called")
+
     file_path = None
 
     try:
-        # Save uploaded file
         file_path = save_uploaded_file(file)
 
-        # Extract text from resume
         resume_text = extract_resume_text(file_path)
 
-        # Analyze resume
         result = analyze_resume(
             resume_text,
             job_description
         )
 
-        return result
+        ai_feedback = generate_resume_feedback(
+            resume_text,
+            job_description,
+            result
+        )
+
+        logger.info("Resume analyzed successfully")
+
+        return {
+            **result,
+            "ai_feedback": ai_feedback
+        }
 
     except ValueError as e:
+        logger.warning(f"Validation error: {e}")
+
         raise HTTPException(
             status_code=400,
             detail=str(e)
         )
 
-    except Exception as e:
+    except Exception:
+        logger.exception("Unexpected error during resume analysis")
+
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected error: {str(e)}"
+            detail="Internal server error"
         )
 
     finally:
-        # Delete uploaded file after analysis
         if file_path and Path(file_path).exists():
             Path(file_path).unlink()
+
+        logger.info("Temporary file deleted")
+
