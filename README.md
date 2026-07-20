@@ -1,13 +1,28 @@
 # AI Resume Analyzer
 
-A Python and AI-powered application that analyzes resumes against job descriptions and provides actionable feedback.
+A Python and AI-powered application that analyzes resumes, calculates the match score against job descriptions and provides actionable feedback.
+
+
+# Features
+Upload PDF and DOCX resumes
+Extract and clean resume text
+Analyze technical skills
+Compare resumes with job descriptions
+Calculate a resume match score
+Generate AI-powered resume improvement suggestions
+REST API with Swagger documentation
+Automated tests with Pytest
 
 ## Tech Stack
 
-- Python 3.11
-- FastAPI
-- Pydantic
-- Git
+Python
+FastAPI
+Google Gemini AI
+PyMuPDF
+python-docx
+Pydantic
+Pytest
+Git
 
 ## Status
 
